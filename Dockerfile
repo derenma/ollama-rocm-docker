@@ -1,10 +1,11 @@
-FROM ubuntu:20.04 AS rocm
+#FROM ubuntu:20.04 AS rocm-updated
+FROM ubuntu:22.04 AS rocm-updated
 
 # Copypasted from
 # https://github.com/RadeonOpenCompute/ROCm-docker/blob/4e7caeb017aad706cd49ac433938f1226874ff9d/rocm-terminal/Dockerfile
 
-ARG ROCM_VERSION=5.7
-ARG AMDGPU_VERSION=5.7
+ARG ROCM_VERSION=6.0.2
+ARG AMDGPU_VERSION=6.0.2
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates curl gnupg && \
   curl -sL http://repo.radeon.com/rocm/rocm.gpg.key | apt-key add - && \
@@ -43,14 +44,18 @@ RUN apt-get update && \
   apt-get install -y rocblas-dev hipblas-dev wget git cmake build-essential && \
   rm -rf /var/lib/apt/lists/*
 
-RUN wget https://dl.google.com/go/go1.21.4.linux-amd64.tar.gz && \
-  tar -C /usr/local -xzf go1.21.4.linux-amd64.tar.gz && \
-  rm go1.21.4.linux-amd64.tar.gz
+#RUN wget https://dl.google.com/go/go1.21.4.linux-amd64.tar.gz && \
+#  tar -C /usr/local -xzf go1.21.4.linux-amd64.tar.gz && \
+#  rm go1.21.4.linux-amd64.tar.gz
+
+RUN wget https://dl.google.com/go/go1.21.7.linux-amd64.tar.gz && \
+  tar -C /usr/local -xzf go1.21.7.linux-amd64.tar.gz && \
+  rm go1.21.7.linux-amd64.tar.gz
 
 ENV PATH "${PATH}:/usr/local/go/bin"
 
 # Fix for 6700XT - https://github.com/RadeonOpenCompute/ROCm/issues/1756#issuecomment-1160386571
-ENV HSA_OVERRIDE_GFX_VERSION=10.3.0
+#ENV HSA_OVERRIDE_GFX_VERSION=10.3.0 # May not be needed for 7900xtx
 
 RUN git clone https://github.com/CNugteren/CLBlast.git && \
   cd CLBlast && \
