@@ -1,11 +1,10 @@
-#FROM ubuntu:20.04 AS rocm-updated
 FROM ubuntu:22.04 AS rocm-updated
 
 # Copypasted from
 # https://github.com/RadeonOpenCompute/ROCm-docker/blob/4e7caeb017aad706cd49ac433938f1226874ff9d/rocm-terminal/Dockerfile
 
-ARG ROCM_VERSION=6.0.2
-ARG AMDGPU_VERSION=6.0.2
+ARG ROCM_VERSION=6.0
+ARG AMDGPU_VERSION=6.0
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ca-certificates curl gnupg && \
   curl -sL http://repo.radeon.com/rocm/rocm.gpg.key | apt-key add - && \
@@ -43,10 +42,6 @@ USER root
 RUN apt-get update && \
   apt-get install -y rocblas-dev hipblas-dev wget git cmake build-essential && \
   rm -rf /var/lib/apt/lists/*
-
-#RUN wget https://dl.google.com/go/go1.21.4.linux-amd64.tar.gz && \
-#  tar -C /usr/local -xzf go1.21.4.linux-amd64.tar.gz && \
-#  rm go1.21.4.linux-amd64.tar.gz
 
 RUN wget https://dl.google.com/go/go1.21.7.linux-amd64.tar.gz && \
   tar -C /usr/local -xzf go1.21.7.linux-amd64.tar.gz && \
